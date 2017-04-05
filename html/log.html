@@ -2,8 +2,218 @@
 <html>
  <head>
   <meta charset="utf-8"></meta>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
  </head>
  <body>
-  LOGS DE EXECUÇÃO
+  LOGS DE EXECUÇÃO<br><br>
+
+  É possível gerar diversos logs de execução com variações de quantidade de nodos de entrada através do script a seguir:
+
+  <pre class="prettyprint">
+   #!/bin/bash
+
+   for i in `seq 3 $1`;
+   do
+   	echo "Executando simulação de $i nodos";
+   	./tempo $i >> logs/output$i.txt
+   done
+  </pre>
+  <br><br>
+  Link para download dos logs de execução da tarefa 4, de 3 a 6 nodos:<br>
+  <a href="logs_tarefa4.tar.gz">Logs Tarefa 4</a>
+  <br><br>
+  A seguir, logs das 5 tarefas com 3 nodos de entrada:<br><hr>
+  <div>
+   Tarefa 4<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  30.0<br>
+   Nodo 0: [ 0, 0, -1 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  30.0<br>
+   Nodo 1: [ -1, 0, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  30.0<br>
+   Nodo 2: [ 0, 0, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 FALHOU no tempo  31.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como FALHO no tempo  60.0<br>
+   Nodo 0: [ 0, 1, -1 ]<br>
+   <br>
+   O nodo 0 TESTOU o nodo 2 como SEM FALHA no tempo  60.0<br>
+   Nodo 0: [ 0, 1, 0 ]<br>
+   <br>
+   ================================<br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  60.0<br>
+   Nodo 2: [ 0, 1, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 RECUPEROU no tempo  61.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  90.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  90.0<br>
+   Nodo 2: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  91.0<br>
+   Nodo 1: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 120.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo 120.0<br>
+   Nodo 2: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo 121.0<br>
+   Nodo 1: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 150.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo 150.0<br>
+   Nodo 2: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo 151.0<br>
+   Nodo 1: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 180.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo 180.0<br>
+   Nodo 2: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo 181.0<br>
+   Nodo 1: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 210.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+  </div>
+  <hr>
+  <div>
+   Tarefa 3<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  30.0<br>
+   Nodo 0: [ 0, 0, -1 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  30.0<br>
+   Nodo 1: [ -1, 0, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  30.0<br>
+   Nodo 2: [ 0, -1, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 FALHOU no tempo  31.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como FALHO no tempo  60.0<br>
+   Nodo 0: [ 0, 1, -1 ]<br>
+   <br>
+   O nodo 0 TESTOU o nodo 2 como SEM FALHA no tempo  60.0<br>
+   Nodo 0: [ 0, 1, 0 ]<br>
+   <br>
+   ================================<br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  60.0<br>
+   Nodo 2: [ 0, -1, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 RECUPEROU no tempo  61.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  90.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  90.0<br>
+   Nodo 2: [ 0, -1, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  91.0<br>
+   Nodo 1: [ -1, 0, 0 ]<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 120.0<br>
+   Nodo 0: [ 0, 2, 0 ]<br>
+  </div>
+  <hr>
+  <div>
+   Tarefa 2<br>
+   <br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  30.0<br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  30.0<br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  30.0<br>
+   ================================<br>
+   O nodo 1 FALHOU no tempo  31.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como FALHO no tempo  60.0<br>
+   O nodo 0 TESTOU o nodo 2 como SEM FALHA no tempo  60.0<br>
+   ================================<br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  60.0<br>
+   ================================<br>
+   O nodo 1 RECUPEROU no tempo  61.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  90.0<br>
+   ================================<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  90.0<br>
+   ================================<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  91.0<br>
+   ================================<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 120.0<br>
+  </div>
+  <hr>
+  <div>
+   Tarefa 1<br>
+   <br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  30.0<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  30.0<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  30.0<br>
+   O nodo 1 FALHOU no tempo  31.0<br>
+   O nodo 0 TESTOU o nodo 1 como FALHO no tempo  60.0<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  60.0<br>
+   O nodo 1 RECUPEROU no tempo  61.0<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo  90.0<br>
+   O nodo 2 TESTOU o nodo 0 como SEM FALHA no tempo  90.0<br>
+   O nodo 1 TESTOU o nodo 2 como SEM FALHA no tempo  91.0<br>
+   O nodo 0 TESTOU o nodo 1 como SEM FALHA no tempo 120.0<br>
+  </div>
+  <hr>
+  <div>
+   Tarefa 0<br>
+   <br>
+   O nodo 0 TESTOU no tempo  30.0<br>
+   O nodo 1 TESTOU no tempo  30.0<br>
+   O nodo 2 TESTOU no tempo  30.0<br>
+   O nodo 1 FALHOU no tempo  31.0<br>
+   O nodo 0 TESTOU no tempo  60.0<br>
+   O nodo 2 TESTOU no tempo  60.0<br>
+   O nodo 1 RECUPEROU no tempo  61.0<br>
+   O nodo 0 TESTOU no tempo  90.0<br>
+   O nodo 2 TESTOU no tempo  90.0<br>
+   O nodo 1 TESTOU no tempo  91.0<br>
+   O nodo 0 TESTOU no tempo 120.0<br>
+  </div>
  </body>
 </html>
