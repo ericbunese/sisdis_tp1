@@ -5,7 +5,7 @@
  Aluno Eric Eduardo Bunese
  Professor Elias P. Duarte Jr.
 
- Última edição feita em 05/04/2017
+ Última edição feita em 09/04/2017
 
 */
 
@@ -25,15 +25,17 @@ typedef struct tnodo
  int *STATE;
 }tnodo;
 
-// Globais
+// Vetor de nodos
 tnodo* nodo;
-static int N, token, event, r, i;
+// Informações gerais da simulação
+static int N, token, event, r, i, delay_evento;
 static char fa_name[5];
+double maxTime;
 
 // Imprime o vetor STATE de um nodo.
 void imprimeNodo(int token)
 {
- printf("Nodo %d: [ ", token);
+ printf("Vetor STATE do nodo %d: [ ", token);
  for (int i=0;i<N;++i)
  {
   printf("%d", nodo[token].STATE[i]);
@@ -43,8 +45,14 @@ void imprimeNodo(int token)
  printf(" ]\n\n");
 }
 
-// Retorna o maior entre dois números
+// Retorna o maior entre dois números inteiros
 int max(int a, int b)
+{
+ return (a>b?a:b);
+}
+
+// Retorna o maior entre dois números double
+double maxD(double a, double b)
 {
  return (a>b?a:b);
 }
@@ -131,34 +139,41 @@ char* tokenize(char *source,int pos,char sep)
 }
 
 // Faz o escalonamento de eventos a partir do arquivo de entrada
+// Cada linha do arquivo de entrada tem a sintaxe F,token,tempo ou R,token,tempo
 void escalona_eventos(char* fname)
 {
  FILE* f;
  f = fopen(fname, "r");
  if (f!=NULL)
  {
-  char *line, *op;
+  char line[15], *op, *tk, *dl;
   int token;
   double delay;
   do
   {
-   fscanf(f, "\n%[^\n]", line);
-   op = tokenize(line, 0, ',');
-   token = atoi(tokenize(line, 1, ','));
-   delay = atof(tokenize(line, 2, ','));
-   if (strcmp(op, "F")==0)
+   if (fgets(line, 15, f)!=NULL)
    {
-    printf("Evento FAULT escalonado para o nodo %d no tempo %5.1f\n", token, delay);
-    schedule(FAULT, delay, token);
-   }
-   else if (strcmp(op, "R")==0)
-   {
-    printf("Evento REPAIR escalonado para o nodo %d no tempo %5.1f\n", token, delay);
-    schedule(REPAIR, delay, token);
+    op = tokenize(line, 0, ',');
+    tk = tokenize(line, 1, ',');
+    dl = tokenize(line, 2, ',');
+    if (op!=NULL && tk!=NULL && dl!=NULL)
+    {
+     token = atoi(tk);
+     delay = atof(dl);
+     maxTime = maxD(maxTime, delay+90.0);
+     if (strcmp(op, "F")==0)
+     {
+      printf("*Evento FAULT escalonado para o nodo %d no tempo %5.1f\n", token, delay);
+      schedule(FAULT, delay, token);
+     }
+     else if (strcmp(op, "R")==0)
+     {
+      printf("*Evento REPAIR escalonado para o nodo %d no tempo %5.1f\n", token, delay);
+      schedule(REPAIR, delay, token);
+     }
+    }
    }
   } while(!feof(f));
-  //schedule(FAULT, 31.0, 1); // Nodo 1 falha no tempo 31
-  //schedule(REPAIR, 61.0, 1); // Nodo 1 recupera no tempo 61
   fclose(f);
  }
 }
@@ -172,7 +187,7 @@ int main(int argc, char * argv[])
   exit(1);
  }
 
- printf("Trabalho Prático 1 de Sistemas Distribuídos\nAutor: Eric Eduardo Bunese\nProfessor: Elias P. Duarte Jr.\n\n");
+ printf("\n\n====================\nTrabalho Prático 1 de Sistemas Distribuídos\nAutor: Eric Eduardo Bunese\nProfessor: Elias P. Duarte Jr.\n\n");
 
  N = atoi(argv[1]);
  smpl(0, "Trabalho Prático 1 SisDis");
@@ -182,7 +197,7 @@ int main(int argc, char * argv[])
 
  for(i = 0; i < N; i++)
  {
-  memset(fa_name,'\0',5);
+  memset(fa_name,'\0', 5);
   sprintf(fa_name, "%d", i);
   nodo[i].id = facility(fa_name, 1);
   nodo[i].STATE = (int*)malloc(sizeof(int)*N);
@@ -191,18 +206,15 @@ int main(int argc, char * argv[])
  }
 
  // Escalonamento de eventos
-
  for(i = 0; i < N; i++)
      schedule(TEST, 30.0, i);
 
  // Faz o escalonamento de eventos a partir do arquivo de entrada.
  escalona_eventos(argv[2]);
-
- //schedule(FAULT, 31.0, 1); // Nodo 1 falha no tempo 31
- //schedule(REPAIR, 61.0, 1); // Nodo 1 recupera no tempo 61
+ printf("\n====================\nInicializando Simulação\n====================\n\n");
 
  // Checagem de eventos
- while(time() < 200)
+ while(time() < maxTime)
  {
   cause(&event, &token);
   switch(event)
@@ -241,6 +253,8 @@ int main(int argc, char * argv[])
    break;
   }
  }
+
+ printf("\n\nEncerrando Simulação\n\n");
 
  return 0;
 }
