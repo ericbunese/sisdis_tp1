@@ -11,142 +11,32 @@
    O objetivo deste trabalho prático é implementar o algoritmo Adaptive-DSD,
    sobre o ambiente de execução do SMPL (Simulation Programming Language)<br>
    Neste trabalho, consideramos apenas falhas do tipo CRASH, e também a premissa do algoritmo Adaptive-DSD:
-   'Apenas um evento ocorre de cada vez.'<br>
-   <br>
-   Foram feitos então, 5 exercícios incrementais para desenvolver o trabalho:
-   <br>
-   <il>
-    <li>Tarefa 0</li>
-    <li>Tarefa 1</li>
-    <li>Tarefa 2</li>
-    <li>Tarefa 3</li>
-    <li>Tarefa 4</li>
-   </il>
-   <br>
-   Na Tarefa 0, bastava implementar o código passado no quadro em sala de aula para o programa tempo.c,
-   que apresenta a sintaxe básica de uso da SMPL e permite construir um sistema distribuído com N nodos,
-   que executam testes entre si.
-   <br><br>
-   Já na Tarefa 1, o objetivo era introduzir a verificação de nós falhos, fazendo com que cada nó realmente
-   verificasse o estado do próximo. Para isso, foi feita a função int testarNodo(int token), que recebe um
-   token de nodo, de acordo com a função executada em um nodo i: (i+1) mod N, tal que N é o número de nodos.
-   Esta função verifica o status do nodo, se está falho ou funcionando.
+   'Apenas um evento ocorre de cada vez.'<br><br>
+
+   De modo a facilitar a configuração de eventos no trabalho, o programa tempo.c espera um segundo argumento além do número de nodos.<br>
+   Este segundo argumento é o nome de um arquivo de entrada, que descreverá todos os eventos que o usuário desejar escalonar<br>
+   no programa, através de uma sintaxe muito simples.<br><br>
+
+   Exemplo:<br>
    <pre class="prettyprint">
-    void testarNodo(int token)
-    {
-     int token2 = (token+1)%N;
-     int st = status(nodo[token2].id);
-
-     char *c = (st==0?"SEM FALHA":"FALHO");
-
-     printf("O nodo %d TESTOU o nodo %d como %s no tempo %5.1f\n", token, token2, c, time());
-    }
+    F,1,61.0
+    R,1,91.0
    </pre>
-   <br><br>
-   Na Tarefa 2, o objetivo era introduzir a funcionalidade de cada nó
-   testar sequencialmente os próximos nós, até encontrar um nó que não esteja falho.
-   Para implementar isso, a função int testarNodo(int token) foi alterada para int testarNodo(int token1, int token2),
-   que testa o nodo indicado por token2 a partir do nodo indicado por token1. A chamada da função está encapsulada no seguinte trecho
-   de código:
-   <pre class="prettyprint">
-    while(time() < 200)
-    {
-     cause(&event, &token);
-     switch(event)
-     {
-      case TEST:
-         ...
-         int offset = 1;
-         int token2, st;
+   Na linha 1, é escalonado um evento FAULT para o nodo 1 no tempo 61.0.<br>
+   Na linha 2, é escalonado um evento REPAIR para o nodo 1 no tempo 91.0.<br><br>
 
-         // Testa todos os nodos até encontrar um sem falha.
-         do
-         {
-          token2 = (token+offset)%N;
-          st = testarNodo(token, token2);
-          offset+=1;
-         }
-         while (st!=0 && token2!=token);
-      break;
-     ...
-   </pre>
-   <br><br>
-   A Tarefa 3, pede
-   para implementar o vetor STATE[0..N-1] para cada nó, que guardará o estado dos nós do sistema a partir do início da execução.
-   Um valor par indica que o nó está sem falhas e um valor ímpar indica que está falho. Este vetor também facilita a detecção de
-   eventos de troca de estado em quaisquer nós. Para implementar o vetor STATE, foram feitas alterações na estruturas dos nodos, e
-   na função testaNodo:
+   Neste trabalho, a execução irá apresentar os eventos que ocorrem, os testes executados por cada nodo e quais
+   as informações obtidas em cada teste.<br>
 
-   <pre class="prettyprint">
-    // Nodo
-    typedef struct tnodo
-    {
-     int id;
-     int *STATE;
-    }tnodo;
-
-    ...
-
-    // Função que testa um nodo a partir do token do nodo atual
-    int testarNodo(int token1, int token2)
-    {
-     int st = status(nodo[token2].id);
-
-     char *c = (st==0?"SEM FALHA":"FALHO");
-
-     if (nodo[token1].STATE[token1]==-1)
-         nodo[token1].STATE[token1] = 0;
-
-     // Verifica se houve troca de estado.
-     if (nodo[token1].STATE[token2]==-1)
-         nodo[token1].STATE[token2] = st;
-     else
-     {
-      if (st!=0)
-      {
-       // Se o STATE estiver sem falha, atualiza para com falha.
-       if (nodo[token1].STATE[token2] % 2 == 0)
-           ++nodo[token1].STATE[token2];
-      }
-      else
-      {
-       // Se o STATE estiver com falha, atualiza para sem falha.
-       if (nodo[token1].STATE[token2] % 2 == 1)
-           ++nodo[token1].STATE[token2];
-      }
-     }
-
-     printf("O nodo %d TESTOU o nodo %d como %s no tempo %5.1f\n", token1, token2, c, time());
-     imprimeNodo(token1);
-     return st;
-    }
-   </pre>
-
-   <br><br>Finalmente, a Tarefa 4 pede para implementar a troca de informações entre os nós.
-   Atualizando dados de nós que não foram testados a partir do nó atual. Esta alteração também foi
-   implementada sobre a função testarNodo, adicionando uma chamada ao procedimento void obtemInfo(token1, token2):
-
-   <pre class="prettyprint">
-    // O nodo token1 obtém informações a partir de token2
-    void obtemInfo(token1, token2)
-    {
-     for (int i=0;i&ltN;++i)
-     {
-      // Não obtém a informação do nodo que testou.
-      if (i!=token2)
-          nodo[token1].STATE[i] = max(nodo[token2].STATE[i], nodo[token1].STATE[i]);
-     }
-    }
-   </pre>
-
-   As alterações propostas fazem muito sentido, e a construção sequencial delas é extremamente importante para o entendimento de todas
-   as partes do algoritmo Adaptive-DSD.
+   O trabalho foi construído sobre os programas das 5 tarefas passadas em sala de aula, adicionando de maneira construtiva cada funcionalidade<br>
+   do algoritmo Adaptive-DSD.
 
    <br><br>
    Foram utilizadas como funções auxiliares as seguintes:
    <il>
     <li>int max(int a, int b) - Que retorna o maior entre dois inteiros.</li>
     <li>void imprimeNodo(int token) - Que imprime o vetor STATE de um nodo.</li>
+    <li>double maxD(double a, double b) - Que retorna o maior entre dois Double.</li>
    </il>
 
 

@@ -58,18 +58,28 @@ double maxD(double a, double b)
 }
 
 // O nodo token1 obtém informações a partir de token2
-void obtemInfo(token1, token2)
+void obtemInfo(int token1, int token2, int testes)
 {
+ int cont=0;
+ printf("O nodo %d obtém informações sobre os seguintes nodos, a partir do nodo %d: [", token1, token2);
  for (int i=0;i<N;++i)
  {
-  // Não obtém a informação do nodo que testou.
-  if (i!=token2)
-      nodo[token1].STATE[i] = max(nodo[token2].STATE[i], nodo[token1].STATE[i]);
+  // Não obtém a informação dos nodos que testou.
+  if (i!=token1 && (i<token2-testes || i>token2))
+  {
+   nodo[token1].STATE[i] = max(nodo[token2].STATE[i], nodo[token1].STATE[i]);
+   if (cont>0)
+    printf(", %d", i);
+   else
+    printf("%d", i);
+   cont++;
+  }
  }
+ printf("]\n");
 }
 
 // Função que testa um nodo a partir do token do nodo atual
-int testarNodo(int token1, int token2)
+int testarNodo(int token1, int token2, int testes)
 {
  int st = status(nodo[token2].id);
 
@@ -97,11 +107,11 @@ int testarNodo(int token1, int token2)
   }
  }
 
+ printf("O nodo %d TESTOU o nodo %d como %s no tempo %5.1f\n", token1, token2, c, time());
  // Obtem informações do nodo testado
  if (st==0)
-     obtemInfo(token1, token2);
+     obtemInfo(token1, token2, testes);
 
- printf("O nodo %d TESTOU o nodo %d como %s no tempo %5.1f\n", token1, token2, c, time());
  imprimeNodo(token1);
  return st;
 }
@@ -228,7 +238,7 @@ int main(int argc, char * argv[])
      do
      {
       token2 = (token+offset)%N;
-      st = testarNodo(token, token2);
+      st = testarNodo(token, token2, offset-1);
       offset+=1;
      }
      while (st!=0 && token2!=token);
