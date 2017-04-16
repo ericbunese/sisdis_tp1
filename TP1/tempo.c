@@ -28,9 +28,10 @@ typedef struct tnodo
 // Vetor de nodos
 tnodo* nodo;
 // Informações gerais da simulação
-static int N, token, event, r, i, delay_evento;
+static int N, token, event, r, i;
 static char fa_name[5];
-double maxTime;
+double maxTime, tempoEvento;
+int nodosFalhos, contador;
 
 // Imprime o vetor STATE de um nodo.
 void imprimeNodo(int token)
@@ -61,12 +62,20 @@ double maxD(double a, double b)
 void obtemInfo(int token1, int token2, int testes)
 {
  int cont=0;
+ int aviso=0;
  printf("O nodo %d obtém informações sobre os seguintes nodos, a partir do nodo %d: [", token1, token2);
  for (int i=0;i<N;++i)
  {
   // Não obtém a informação dos nodos que testou.
   if (i!=token1 && (i<token2-testes || i>token2))
   {
+   if (nodo[token1].STATE[i]<nodo[token2].STATE[i])
+   {
+    if (++contador==N-nodosFalhos)
+    {
+     aviso=1;
+    }
+   }
    nodo[token1].STATE[i] = max(nodo[token2].STATE[i], nodo[token1].STATE[i]);
    if (cont>0)
     printf(", %d", i);
@@ -76,6 +85,8 @@ void obtemInfo(int token1, int token2, int testes)
   }
  }
  printf("]\n");
+ if (aviso)
+     printf("Evento diagnosticado.\nAtraso: %d rodadas de testes.\n", (int)((time()-tempoEvento)/30.0+1));
 }
 
 // Função que testa um nodo a partir do token do nodo atual
@@ -238,8 +249,11 @@ int main(int argc, char * argv[])
      do
      {
       token2 = (token+offset)%N;
-      st = testarNodo(token, token2, offset-1);
-      offset+=1;
+      if (token2!=token)
+      {
+       st = testarNodo(token, token2, offset-1);
+       offset+=1;
+      }
      }
      while (st!=0 && token2!=token);
 
@@ -254,12 +268,18 @@ int main(int argc, char * argv[])
       exit(1);
      }
      printf("O nodo %d FALHOU no tempo %5.1f\n", token, time());
+     tempoEvento = time();
+     nodosFalhos++;
+     contador = 0;
    break;
 
    case REPAIR:
      release(nodo[token].id, token);
      printf("O nodo %d RECUPEROU no tempo %5.1f \n", token, time());
      schedule(TEST, 30.0, token);
+     tempoEvento = time();
+     nodosFalhos--;
+     contador = 0;
    break;
   }
  }
